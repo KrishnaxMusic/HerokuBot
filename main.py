@@ -61,7 +61,7 @@ def callback(call):
         kb = InlineKeyboardMarkup()
         kb.add(InlineKeyboardButton("˹ Hᴇʀᴏᴋᴜ Tᴇᴀᴍ ˼– ₹350", callback_data="buy_Heroku Team"))
         kb.add(InlineKeyboardButton("˹ Hᴇʀᴏᴋᴜ Pᴇʀsᴏɴᴀʟ ˼ – ₹300", callback_data="buy_Heroku Personal"))
-        bot.edit_message_text("Cʜᴏᴏsᴇ Yᴏᴜʀ Sᴇʀᴠɪᴄᴇ:", call.message.chat.id, call.message.message_id, reply_markup=kb)
+        bot.edit_message_text("Choose your service:", call.message.chat.id, call.message.message_id, reply_markup=kb)
 
     # ---- SERVICE SELECT ----
     elif data.startswith("buy_") and user_stage.get(user_id) == "service":
