@@ -37,7 +37,7 @@ def start(msg):
     user_stage[user_id] = "start"
 
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton("ʙᴜʏ ʜᴇʀᴏᴋᴜ ᴀᴄᴄᴏᴜɴᴛ", callback_data="buy"))
+    kb.add(InlineKeyboardButton("💳 BUY", callback_data="buy"))
     # Send photo with caption and button
     bot.send_photo(
         msg.chat.id,
