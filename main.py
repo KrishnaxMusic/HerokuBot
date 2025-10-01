@@ -38,7 +38,7 @@ def start(msg):
 
     kb = InlineKeyboardMarkup()
     kb.add(InlineKeyboardButton("💳 BUY", callback_data="buy"))
-    bot.send_message(msg.chat.id, "👋 Welcome to USA Number Service\n👉 Telegram / WhatsApp OTP Buy Here", reply_markup=kb)
+    bot.send_message(msg.chat.id, "👋 Welcome to Heroku Bot Service\n👉 Heroku Buy Here", reply_markup=kb)
 
 # -----------------------
 # CALLBACK HANDLER
@@ -52,16 +52,16 @@ def callback(call):
     if data == "buy":
         user_stage[user_id] = "service"
         kb = InlineKeyboardMarkup()
-        kb.add(InlineKeyboardButton("Telegram – ₹50", callback_data="buy_telegram"))
-        kb.add(InlineKeyboardButton("WhatsApp – ₹45", callback_data="buy_whatsapp"))
+        kb.add(InlineKeyboardButton("Heroku Personal – ₹300", callback_data="buy_Heroku Personal"))
+        kb.add(InlineKeyboardButton("Heroku Team – ₹350", callback_data="buy_Heroku Team"))
         bot.edit_message_text("Choose your service:", call.message.chat.id, call.message.message_id, reply_markup=kb)
 
     # ---- SERVICE SELECT ----
     elif data.startswith("buy_") and user_stage.get(user_id) == "service":
-        service = "Telegram" if "telegram" in data else "WhatsApp"
+        service = "Heroku" if "Heroku" in data else "Heroku Team"
         user_stage[user_id] = "waiting_utr"
         pending_messages[user_id] = {'service': service}
-        bot.send_photo(call.message.chat.id, "https://files.catbox.moe/8rpxez.jpg",
+        bot.send_photo(call.message.chat.id, "https://files.catbox.moe/poeeya.jpg",
                        caption=f"Scan & Pay for {service}\nThen send your *12 digit* UTR number or screenshot here.")
 
     # ---- ADMIN ACTION ----
@@ -94,7 +94,7 @@ def callback(call):
         service = info.get('service', 'Service')
 
         if action == "confirm":
-            bot.send_message(target_id, f"✅ Your payment is successful! Generating USA {service} number...…")
+            bot.send_message(target_id, f"✅ Your payment is successful! Generating Heroku {service} Account...…")
             kb = InlineKeyboardMarkup()
             kb.add(InlineKeyboardButton("💬 Chat with User", callback_data=f"chat|{target_id}"))
 
@@ -194,7 +194,7 @@ def complete(msg):
     for uid, active in active_chats.items():
         if active:
             service = pending_messages.get(uid, {}).get('service', 'Service')
-            bot.send_message(uid, f"✅ Your USA {service} process is complete. Thank you for using our bot.")
+            bot.send_message(uid, f"✅ Your Heroku {service} process is complete. Thank you for using our bot.")
             ended.append(uid)
     for uid in ended:
         active_chats.pop(uid, None)
