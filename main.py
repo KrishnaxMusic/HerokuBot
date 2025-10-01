@@ -97,7 +97,7 @@ def callback(call):
             bot.send_message(target_id, f"✅ Your payment is successful! Generating USA {service} number...…")
             kb = InlineKeyboardMarkup()
             kb.add(InlineKeyboardButton("💬 Chat with User", callback_data=f"chat|{target_id}"))
-bot.send_message(ADMIN_ID, f"Payment confirmed for user {target_id}.", reply_markup=kb)
+            bot.send_message(ADMIN_ID, f"Payment confirmed for user {target_id}.", reply_markup=kb)
         else:
             bot.send_message(target_id, "❌ Your payment not received and your query is cancelled.")
             bot.send_message(ADMIN_ID, f"❌ Payment cancelled for user {target_id}.")
