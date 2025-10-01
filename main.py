@@ -56,12 +56,29 @@ def callback(call):
     data = call.data
 
     # ---- BUY BUTTON ----
-    if data == "buy":
-        user_stage[user_id] = "service"
-        kb = InlineKeyboardMarkup()
-        kb.add(InlineKeyboardButton("Telegram – ₹50", callback_data="buy_telegram"))
-        kb.add(InlineKeyboardButton("WhatsApp – ₹45", callback_data="buy_whatsapp"))
-        bot.edit_message_text("Choose your service:", call.message.chat.id, call.message.message_id, reply_markup=kb)
+if data == "buy":
+    user_stage[user_id] = "service"
+    
+    # Create inline keyboard
+    kb = InlineKeyboardMarkup()
+    kb.add(InlineKeyboardButton("Telegram – ₹50", callback_data="buy_telegram"))
+    kb.add(InlineKeyboardButton("WhatsApp – ₹45", callback_data="buy_whatsapp"))
+    
+    # Try to edit the message, fallback to sending a new message if edit fails
+    try:
+        if call.message and call.message.message_id:
+            bot.edit_message_text(
+                "Choose your service:",
+                call.message.chat.id,
+                call.message.message_id,
+                reply_markup=kb
+            )
+        else:
+            bot.send_message(call.from_user.id, "Choose your service:", reply_markup=kb)
+    except Exception as e:
+        print(f"Failed to edit message: {e}")
+        bot.send_message(call.from_user.id, "Choose your service:", reply_markup=kb)
+
 
         
     # ---- SERVICE SELECT ----
