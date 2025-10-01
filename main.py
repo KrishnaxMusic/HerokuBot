@@ -72,7 +72,7 @@ def callback(call):
                        caption=f"Sᴄᴀɴ & Pᴀʏ Fᴏʀ {service}\nTʜᴇɴ Sᴇɴᴅ Yᴏᴜʀ *𝟷𝟸 Dɪɢɪᴛ* UTR Nᴜᴍʙᴇʀ Oʀ Sᴄʀᴇᴇɴsʜᴏᴛ Hᴇʀᴇ.")
 
     # ---- ADMIN ACTION ----
-     elif data.startswith(("confirm","cancel","chat","endchat")):
+    elif data.startswith(("confirm","cancel","chat","endchat")):
         parts = data.split("|")
         action = parts[0]
         target_id = int(parts[1])
