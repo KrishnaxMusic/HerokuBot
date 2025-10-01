@@ -58,8 +58,8 @@ def callback(call):
     if data == "buy":
         user_stage[user_id] = "service"
         kb = InlineKeyboardMarkup()
-        kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Tᴇᴀᴍ ˼– ₹350", callback_data="buy_Heroku Team"))
-        kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Pᴇʀsᴏɴᴀʟ ˼ – ₹300", callback_data="buy_Heroku Personal"))
+        kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Tᴇᴀᴍ– ₹50", callback_data="buy_Heroku Team"))
+        kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Pᴇʀsᴏɴᴀʟ – ₹10", callback_data="buy_Heroku Personal"))
        
         try:
         if call.message and call.message.message_id:
