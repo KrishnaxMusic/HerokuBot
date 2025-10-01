@@ -1,7 +1,7 @@
 {
   "name": "Heroku Bot",
   "description": "A Telegram bot to handle HerokuBot services with payment verification and admin chat system.",
-  "repository": "https://github.com/WCGKING/HerokuBot",
+  "repository": "https://github.com/KrishnaxMusic/HerokuBot",
   "logo": "https://telegra.ph/file/29e4f4188dc43a9b5d08c.jpg",
   "keywords": ["telegram", "bot", "python", "telebot", "pymongo"],
   "buildpacks": [
