@@ -197,7 +197,32 @@ def chat_handler(msg):
         bot.send_message(ADMIN_ID, admin_text, parse_mode="HTML", reply_markup=kb)
 
     user_stage[user_id] = "done"
+
+
+# -----------------------
+# BROADCAST COMMAND
+# -----------------------
+@bot.message_handler(commands=['broadcast'])
+def broadcast(msg):
+    if msg.from_user.id != ADMIN_ID:
+        bot.send_message(msg.chat.id, "⚠️ You are not authorized to use this command.")
+        return
     
+    text = msg.text.partition(' ')[2]  # Get message after /broadcast
+    if not text:
+        bot.send_message(msg.chat.id, "⚠️ Usage: /broadcast Your message here")
+        return
+    
+    sent_count = 0
+    for user in users_col.find():
+        try:
+            bot.send_message(user['user_id'], f"📢 Broadcast:\n{text}")
+            sent_count += 1
+        except:
+            pass  # Ignore users who blocked bot or cannot be reached
+
+    bot.send_message(msg.chat.id, f"✅ Broadcast sent to {sent_count} users.")
+
 # -----------------------
 # RUN BOT
 # -----------------------
