@@ -207,21 +207,35 @@ def broadcast(msg):
     if msg.from_user.id != ADMIN_ID:
         bot.send_message(msg.chat.id, "⚠️ You are not authorized to use this command.")
         return
-    
-    text = msg.text.partition(' ')[2]  # Get message after /broadcast
-    if not text:
+
+    text = msg.text.partition(' ')[2]  # message after /broadcast
+    if not text.strip():
         bot.send_message(msg.chat.id, "⚠️ Usage: /broadcast Your message here")
         return
-    
-    sent_count = 0
-    for user in users_col.find():
-        try:
-            bot.send_message(user['user_id'], f"📢 Broadcast:\n{text}")
-            sent_count += 1
-        except:
-            pass  # Ignore users who blocked bot or cannot be reached
 
-    bot.send_message(msg.chat.id, f"✅ Broadcast sent to {sent_count} users.")
+    sent_count, failed_count = 0, 0
+
+    # Get all unique users from MongoDB
+    all_users = users_col.find({}, {"user_id": 1})
+    for user in all_users:
+        user_id = user.get("user_id")
+        if not user_id:
+            continue
+        try:
+            bot.send_message(int(user_id), f"📢 Broadcast:\n\n{text}")
+            sent_count += 1
+            time.sleep(0.05)  # small delay to avoid hitting flood limits
+        except Exception as e:
+            failed_count += 1
+            print(f"❌ Failed to send broadcast to {user_id}: {e}")
+
+    bot.send_message(
+        msg.chat.id,
+        f"✅ Broadcast finished!\n\n"
+        f"📤 Sent: {sent_count}\n"
+        f"⚠️ Failed: {failed_count}"
+    )
+
 
 # -----------------------
 # RUN BOT
