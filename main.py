@@ -37,11 +37,10 @@ def start(msg):
     user_stage[user_id] = "start"
 
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton("💳 BUY", callback_data="buy"))
-    # Send photo with caption and button
+    kb.add(InlineKeyboardButton("˹ʙᴜʏ ʜᴇʀᴏᴋᴜ ᴀᴄᴄᴏᴜɴᴛ˼", callback_data="buy"))
     bot.send_photo(
         msg.chat.id,
-        photo="https://files.catbox.moe/if8etf.jpg",   # <-- replace with your own image URL
+        photo="https://files.catbox.moe/if8etf.jpg",
         caption="👋 Wᴇʟᴄᴏᴍᴇ ᴛᴏ Hᴇʀᴏᴋᴜ Bᴏᴛ Sᴇʀᴠɪᴄᴇ!\n🚀 Gᴇᴛ ʏᴏᴜʀ Hᴇʀᴏᴋᴜ sᴇᴛᴜᴘ ʜᴇʀᴇ!\n💼 Cᴏɴᴛᴀᴄᴛ ᴛʜᴇ ᴏᴡɴᴇʀ ғᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟs @BRANDEDKING8",
         reply_markup=kb
     )
@@ -54,57 +53,56 @@ def callback(call):
     user_id = call.from_user.id
     data = call.data
 
-    
     # ---- BUY BUTTON ----
-if data == "buy":
-    user_stage[user_id] = "service"
-    kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton("˹ Hᴇʀᴏᴋᴜ Tᴇᴀᴍ ˼– ₹350", callback_data="buy_Heroku Team"))
-    kb.add(InlineKeyboardButton("˹ Hᴇʀᴏᴋᴜ Pᴇʀsᴏɴᴀʟ ˼ – ₹300", callback_data="buy_Heroku Personal"))
-
-    try:
-        if call.message and call.message.message_id:
-            bot.edit_message_text(
-                "Choose your service:",
-                call.message.chat.id,
-                call.message.message_id,
-                reply_markup=kb
-            )
-        else:
+    if data == "buy":
+        user_stage[user_id] = "service"
+        kb = InlineKeyboardMarkup()
+        kb.add(InlineKeyboardButton("˹ Hᴇʀᴏᴋᴜ Tᴇᴀᴍ ˼– ₹350", callback_data="buy_Heroku Team"))
+        kb.add(InlineKeyboardButton("˹ Hᴇʀᴏᴋᴜ Pᴇʀsᴏɴᴀʟ ˼ – ₹300", callback_data="buy_Heroku Personal"))
+        # Safe edit or send
+        try:
+            if call.message and call.message.message_id:
+                bot.edit_message_text("Choose your service:", call.message.chat.id, call.message.message_id, reply_markup=kb)
+            else:
+                bot.send_message(call.from_user.id, "Choose your service:", reply_markup=kb)
+        except:
             bot.send_message(call.from_user.id, "Choose your service:", reply_markup=kb)
-    except telebot.apihelper.ApiTelegramException:
-        # fallback if edit fails
-        bot.send_message(call.from_user.id, "Choose your service:", reply_markup=kb)
-
-      
 
     # ---- SERVICE SELECT ----
     elif data.startswith("buy_") and user_stage.get(user_id) == "service":
-        service = "Heroku" if "Heroku" in data else "Heroku Team"
+        service = "Heroku Team" if "Team" in data else "Heroku Personal"
         user_stage[user_id] = "waiting_utr"
         pending_messages[user_id] = {'service': service}
-        bot.send_photo(call.message.chat.id, "https://files.catbox.moe/poeeya.jpg",
-                       caption=f"Sᴄᴀɴ & Pᴀʏ Fᴏʀ {service}\nTʜᴇɴ Sᴇɴᴅ Yᴏᴜʀ *𝟷𝟸 Dɪɢɪᴛ* UTR Nᴜᴍʙᴇʀ Oʀ Sᴄʀᴇᴇɴsʜᴏᴛ Hᴇʀᴇ.")
+        bot.send_photo(
+            call.from_user.id,
+            "https://files.catbox.moe/poeeya.jpg",
+            caption=f"Sᴄᴀɴ & Pᴀʏ Fᴏʀ {service}\nTʜᴇɴ Sᴇɴᴅ Yᴏᴜʀ *𝟷𝟸 Dɪɢɪᴛ* UTR Nᴜᴍʙᴇʀ Oʀ Sᴄʀᴇᴇɴsʜᴏᴛ Hᴇʀᴇ."
+        )
 
     # ---- ADMIN ACTION ----
-    elif data.startswith(("confirm","cancel","chat","endchat")):
+    elif data.startswith(("confirm", "cancel", "chat", "endchat")):
         parts = data.split("|")
         action = parts[0]
-        target_id = int(parts[1])
+        target_id = int(parts[1]) if len(parts) > 1 else None
+
+        if not target_id:
+            bot.send_message(ADMIN_ID, "⚠️ Invalid callback data.")
+            return
 
         # ---- START CHAT ----
         if action == "chat":
             active_chats[target_id] = True
             kb = InlineKeyboardMarkup()
-            kb.add(InlineKeyboardButton("🛑 End this Chat", callback_data=f"endchat|{target_id}"))
-            bot.send_message(target_id, "💬 Bot is connected with you.")
+            kb.add(InlineKeyboardButton("🛑 End Chat", callback_data=f"endchat|{target_id}"))
+            bot.send_message(target_id, "💬 You are now connected with the admin.")
             bot.send_message(ADMIN_ID, f"💬 Chat started with user {target_id}", reply_markup=kb)
             return
 
         # ---- END CHAT ----
-        elif action == "endchat":
-            bot.send_message(ADMIN_ID, f"💬 Type the final message to send to user {target_id} before ending chat:")
-            bot.register_next_step_handler_by_chat_id(ADMIN_ID, lambda m: finish_chat(m, target_id))
+        if action == "endchat":
+            active_chats.pop(target_id, None)
+            bot.send_message(target_id, "💬 Chat ended by admin.")
+            bot.send_message(ADMIN_ID, f"💬 Chat with user {target_id} ended.")
             return
 
         # ---- CONFIRM/CANCEL PAYMENT ----
@@ -116,14 +114,13 @@ if data == "buy":
         service = info.get('service', 'Service')
 
         if action == "confirm":
-            bot.send_message(target_id, f"✅ Your payment is successful! Generating USA {service} number...…")
+            bot.send_message(target_id, f"✅ Payment successful! Generating {service} account…")
             kb = InlineKeyboardMarkup()
             kb.add(InlineKeyboardButton("💬 Chat with User", callback_data=f"chat|{target_id}"))
             bot.send_message(ADMIN_ID, f"Payment confirmed for user {target_id}.", reply_markup=kb)
         else:
-            bot.send_message(target_id, "❌ Your payment not received and your query is cancelled.")
+            bot.send_message(target_id, "❌ Payment not received. Your request is cancelled.")
             bot.send_message(ADMIN_ID, f"❌ Payment cancelled for user {target_id}.")
-        user_stage[target_id] = "done"
 
 # -----------------------
 # FINISH CHAT FUNCTION
@@ -169,7 +166,7 @@ def chat_handler(msg):
     if msg.content_type == 'text':
         text = msg.text.strip()
         if not text.isdigit() or len(text) != 12:
-            bot.send_message(user_id, "⚠️ Please enter a valid *12 digit* UTR number or send a screenshot.")
+            bot.send_message(user_id, "⚠️ Please enter a valid 12-digit UTR number or send a screenshot.")
             return
         pending_messages[user_id]['utr'] = text
         info_text = f"UTR: {text}"
@@ -177,13 +174,9 @@ def chat_handler(msg):
         photo_id = msg.photo[-1].file_id
         pending_messages[user_id]['screenshot'] = photo_id
         info_text = "📸 Screenshot sent"
-    else:
-        bot.send_message(user_id, "⚠️ Only text (UTR) or photo (screenshot) allowed.")
-        return
 
-    bot.send_message(user_id, "🔄 Payment request is verifying by our records. Please wait 5–10 seconds…")
+    bot.send_message(user_id, "🔄 Payment request is being verified. Please wait 5–10 seconds…")
 
-    # ---- SEND ADMIN ----
     admin_text = (
         f"💰 Payment Request\n"
         f"Name: <a href='tg://user?id={uid}'>{user_name}</a>\n"
@@ -206,57 +199,7 @@ def chat_handler(msg):
     user_stage[user_id] = "done"
 
 # -----------------------
-# COMPLETE COMMAND
-# -----------------------
-@bot.message_handler(commands=['complete'])
-def complete(msg):
-    if msg.from_user.id != ADMIN_ID: return
-    ended = []
-    for uid, active in active_chats.items():
-        if active:
-            service = pending_messages.get(uid, {}).get('service', 'Service')
-            bot.send_message(uid, f"✅ Your USA {service} process is complete. Thank you for using our bot.")
-            ended.append(uid)
-    for uid in ended:
-        active_chats.pop(uid, None)
-    bot.send_message(ADMIN_ID, "💬 All active chats ended.")
-
-# -----------------------
-# REFUND COMMAND
-# -----------------------
-@bot.message_handler(commands=['refund'])
-def refund(msg):
-    if msg.from_user.id != ADMIN_ID: return
-    ended = []
-    for uid, active in active_chats.items():
-        if active:
-            bot.send_message(uid, "❌ Technical issue. Your money will be refunded. Please wait 3–5 seconds…")
-            time.sleep(4)
-            ended.append(uid)
-    for uid in ended:
-        active_chats.pop(uid, None)
-    bot.send_message(ADMIN_ID, "💬 Refund processed for all active chats.")
-
-# -----------------------
-# BROADCAST
-# -----------------------
-@bot.message_handler(commands=['broadcast'])
-def broadcast(msg):
-    if msg.from_user.id != ADMIN_ID: return
-    text = msg.text.partition(' ')[2]
-    if not text:
-        bot.reply_to(msg, "⚠️ Usage: /broadcast Your message here")
-        return
-    sent = 0
-    for u in users_col.find():
-        try:
-            bot.send_message(u['user_id'], f"📢 Broadcast:\n{text}")
-            sent += 1
-        except: pass
-    bot.reply_to(msg, f"✅ Broadcast sent to {sent} users.")
-
-# -----------------------
 # RUN BOT
 # -----------------------
-print("✅ Bot running…")
+print("✅ Branded Heroku Bot running…")
 bot.infinity_polling()
