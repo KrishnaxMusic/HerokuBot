@@ -93,15 +93,15 @@ def callback(call):
         info = pending_messages.pop(target_id)
         service = info.get('service', 'Service')
 
-if action == "confirm":
-    bot.send_message(target_id, f"✅ Your payment is successful! Generating Heroku {service} Heroku...…")
-    kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton("💬 Chat with User", callback_data=f"chat|{target_id}"))
+        if action == "confirm":
+            bot.send_message(target_id, f"✅ Your payment is successful! Generating Heroku {service} number…")
+            kb = InlineKeyboardMarkup()
+            kb.add(InlineKeyboardButton("💬 Chat with User", callback_data=f"chat|{target_id}"))
+            bot.send_message(ADMIN_ID, f"Payment confirmed for user {target_id}.", reply_markup=kb)
+        else:
+            bot.send_message(target_id, "❌ Your payment not received and your query is cancelled.")
+            bot.send_message(ADMIN_ID, f"❌ Payment cancelled for user {target_id}.")
 
-bot.send_message(ADMIN_ID, f"Payment confirmed for user {target_id}.", reply_markup=kb)
-else:
-    bot.send_message(target_id, "❌ Your payment not received and your query is cancelled.")
-    bot.send_message(ADMIN_ID, f"❌ Payment cancelled for user {target_id}.")
 
 # -----------------------
 # FINISH CHAT FUNCTION
