@@ -22,11 +22,6 @@
       "description": "MongoDB connection string (MongoDB Atlas or another provider)",
       "required": true
     }
-  },
-  "formation": {
-  "worker": {
-    "quantity": 1,
-    "size": "eco"
   }
 }
 
