@@ -37,8 +37,14 @@ def start(msg):
     user_stage[user_id] = "start"
 
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton("💳 BUY", callback_data="buy"))
-    bot.send_message(msg.chat.id, "👋 Welcome to USA Number Service\n👉 Telegram / WhatsApp OTP Buy Here", reply_markup=kb)
+    kb.add(InlineKeyboardButton("ʙᴜʏ ʜᴇʀᴏᴋᴜ ᴀᴄᴄᴏᴜɴᴛ", callback_data="buy"))
+    # Send photo with caption and button
+    bot.send_photo(
+        msg.chat.id,
+        photo="https://files.catbox.moe/if8etf.jpg",   # <-- replace with your own image URL
+        caption="👋 Wᴇʟᴄᴏᴍᴇ ᴛᴏ Hᴇʀᴏᴋᴜ Bᴏᴛ Sᴇʀᴠɪᴄᴇ!\n🚀 Gᴇᴛ ʏᴏᴜʀ Hᴇʀᴏᴋᴜ sᴇᴛᴜᴘ ʜᴇʀᴇ!\n💼 Cᴏɴᴛᴀᴄᴛ ᴛʜᴇ ᴏᴡɴᴇʀ ғᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟs @BRANDEDKING8",
+        reply_markup=kb
+    )
 
 # -----------------------
 # CALLBACK HANDLER
@@ -52,17 +58,17 @@ def callback(call):
     if data == "buy":
         user_stage[user_id] = "service"
         kb = InlineKeyboardMarkup()
-        kb.add(InlineKeyboardButton("Telegram – ₹50", callback_data="buy_telegram"))
-        kb.add(InlineKeyboardButton("WhatsApp – ₹45", callback_data="buy_whatsapp"))
+        kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Tᴇᴀᴍ ˼– ₹350", callback_data="buy_Heroku Team"))
+        kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Pᴇʀsᴏɴᴀʟ ˼ – ₹300", callback_data="buy_Heroku Personal"))
         bot.edit_message_text("Choose your service:", call.message.chat.id, call.message.message_id, reply_markup=kb)
 
     # ---- SERVICE SELECT ----
     elif data.startswith("buy_") and user_stage.get(user_id) == "service":
-        service = "Telegram" if "telegram" in data else "WhatsApp"
+        service = "Heroku" if "Heroku" in data else "Heroku Team"
         user_stage[user_id] = "waiting_utr"
         pending_messages[user_id] = {'service': service}
-        bot.send_photo(call.message.chat.id, "https://files.catbox.moe/8rpxez.jpg",
-                       caption=f"Scan & Pay for {service}\nThen send your *12 digit* UTR number or screenshot here.")
+        bot.send_photo(call.message.chat.id, "https://files.catbox.moe/poeeya.jpg",
+                       caption=f"Sᴄᴀɴ & Pᴀʏ Fᴏʀ {service}\nTʜᴇɴ Sᴇɴᴅ Yᴏᴜʀ *𝟷𝟸 Dɪɢɪᴛ* UTR Nᴜᴍʙᴇʀ Oʀ Sᴄʀᴇᴇɴsʜᴏᴛ Hᴇʀᴇ.")
 
     # ---- ADMIN ACTION ----
     elif data.startswith(("confirm","cancel","chat","endchat")):
