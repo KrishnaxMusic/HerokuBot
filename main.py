@@ -197,26 +197,7 @@ def chat_handler(msg):
         bot.send_message(ADMIN_ID, admin_text, parse_mode="HTML", reply_markup=kb)
 
     user_stage[user_id] = "done"
-
-
-# -----------------------
-# BROADCAST
-# -----------------------
-@bot.message_handler(commands=['broadcast'])
-def broadcast(msg):
-    if msg.from_user.id != ADMIN_ID: return
-    text = msg.text.partition(' ')[2]
-    if not text:
-        bot.reply_to(msg, "⚠️ Usage: /broadcast Your message here")
-        return
-    sent = 0
-    for u in users_col.find():
-        try:
-            bot.send_message(u['user_id'], f"📢 Broadcast:\n{text}")
-            sent += 1
-        except: pass
-    bot.reply_to(msg, f"✅ Broadcast sent to {sent} users.")
-
+    
 # -----------------------
 # RUN BOT
 # -----------------------
