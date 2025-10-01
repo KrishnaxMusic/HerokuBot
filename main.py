@@ -38,7 +38,13 @@ def start(msg):
 
     kb = InlineKeyboardMarkup()
     kb.add(InlineKeyboardButton("💳 BUY", callback_data="buy"))
-    bot.send_message(msg.chat.id, "👋 Welcome to Heroku Bot Service\n👉 Heroku Buy Here", reply_markup=kb)
+    # Send photo with caption and button
+    bot.send_photo(
+        msg.chat.id,
+        photo="https://files.catbox.moe/poeeya.jpg",   # <-- replace with your own image URL
+        caption="👋 Welcome to Heroku Bot Service\n👉 Heroku Buy Here",
+        reply_markup=kb
+    )
 
 # -----------------------
 # CALLBACK HANDLER
