@@ -60,20 +60,8 @@ def callback(call):
         kb = InlineKeyboardMarkup()
         kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Tᴇᴀᴍ– ₹50", callback_data="buy_Heroku Team"))
         kb.add(InlineKeyboardButton("Hᴇʀᴏᴋᴜ Pᴇʀsᴏɴᴀʟ – ₹10", callback_data="buy_Heroku Personal"))
-       
-        try:
-        if call.message and call.message.message_id:
-            bot.edit_message_text(
-                "Choose your service:",
-                call.message.chat.id,
-                call.message.message_id,
-                reply_markup=kb
-            )
-        else:
-            bot.send_message(call.from_user.id, "Choose your service:", reply_markup=kb)
-    except telebot.apihelper.ApiTelegramException:
-        # fallback if edit fails
-        bot.send_message(call.from_user.id, "Choose your service:", reply_markup=kb)
+        bot.edit_message_text("Choose your service:", call.message.chat.id, call.message.message_id, reply_markup=kb)
+      
 
     # ---- SERVICE SELECT ----
     elif data.startswith("buy_") and user_stage.get(user_id) == "service":
